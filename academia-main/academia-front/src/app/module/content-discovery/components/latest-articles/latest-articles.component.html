@@ -1,0 +1,41 @@
+<div class="latest-articles">
+  
+  <div *ngIf="loading" class="loading-state">
+    <div class="loader"></div>
+    <p>Loading latest articles...</p>
+  </div>
+  
+  <div *ngIf="error" class="error-state">
+    <p>{{ error }}</p>
+    <button (click)="loadLatestArticles()">Try Again</button>
+  </div>
+  
+  <div *ngIf="!loading && !error">
+    <div *ngIf="latestArticles.length === 0" class="empty-state">
+      <p>No recent articles available yet.</p>
+    </div>
+    
+    <div class="latest-grid" *ngIf="latestArticles.length > 0">
+      <div *ngFor="let article of latestArticles" class="article-card" [routerLink]="['/papers', article.id]">
+        <div class="cover-image" [style.background-image]="article.articleCover ? 'url(' + article.articleCover + ')' : 'none'">
+          <div class="domain-badge">{{article.domain?.name}}</div>
+        </div>
+        <div class="article-content">
+          <h3 class="article-title">{{ article.title }}</h3>
+          <div class="author">{{ article.authorName }}</div>
+          <p class="article-abstract">{{article.abstract_ | slice:0:120}}{{article.abstract_ && article.abstract_.length > 120 ? '...' : ''}}</p>
+          <div class="article-footer">
+            <div class="metadata">
+              <div class="date">{{article.createdDate | date:'mediumDate'}}</div>
+              <div class="label">New</div>
+            </div>
+            <button class="read-more">
+              <span>Read</span>
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

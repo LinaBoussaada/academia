@@ -1,0 +1,336 @@
+.latest-articles {
+  width: 100%;
+  
+  .loading-state, .error-state, .empty-state {
+    padding: 20px;
+    text-align: center;
+    
+    button {
+      background-color: #3f51b5;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+      
+      &:hover {
+        background-color: #303f9f;
+      }
+    }
+  }
+  
+  .loader {
+    border: 3px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 3px solid #3f51b5;
+    width: 24px;
+    height: 24px;
+    margin: 0 auto 10px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
+
+.latest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+  
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  // Staggered entrance animation for items
+  .article-card {
+    opacity: 0;
+    animation: fade-in 0.5s ease-out forwards;
+    
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
+  }
+}
+
+.article-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  border: 1px solid rgba(225, 228, 232, 0.8);
+  position: relative;
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    border-color: rgba(180, 200, 220, 0.5);
+    
+    .read-more {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .cover-image {
+      &::before {
+        opacity: 0.7;
+      }
+    }
+    
+    &::after {
+      opacity: 1;
+    }
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, #27ae60, #2ecc71);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+}
+
+.cover-image {
+  height: 180px;
+  background-color: #f5f7fa;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.5s ease;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
+    transition: opacity 0.3s ease;
+  }
+  
+  // Placeholder for when no image is available
+  &:not([style*="background-image"]), &[style*="background-image: none"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
+    animation: pulse 3s infinite;
+    
+    &::after {
+      content: '\f15b';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 400;
+      font-size: 3.5rem;
+      color: rgba(39, 174, 96, 0.2);
+      animation: float 3s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.domain-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #2c3e50;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.article-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 1.5rem;
+}
+
+.article-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.25rem;
+  color: #2c3e50;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-weight: 600;
+  transition: color 0.2s ease;
+  
+  .article-card:hover & {
+    color: #27ae60;
+  }
+}
+
+.author {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  
+  &::before {
+    content: '\f007';
+    font-family: 'Font Awesome 5 Free';
+    margin-right: 6px;
+    font-size: 0.8rem;
+    color: #95a5a6;
+  }
+}
+
+.article-abstract {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.6;
+  max-height: 4.8em;
+  color: #5d6d7e;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.article-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(225, 228, 232, 0.5);
+}
+
+.metadata {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.date {
+  font-size: 0.8rem;
+  color: #95a5a6;
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+  
+  &::before {
+    content: '\f073';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 400;
+    margin-right: 6px;
+    font-size: 0.8rem;
+    color: #bdc3c7;
+  }
+}
+
+.label {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  background-color: rgba(39, 174, 96, 0.15);
+  color: #27ae60;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.read-more {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.9;
+  transform: translateX(10px);
+  box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3);
+  
+  span {
+    margin-right: 0.5rem;
+  }
+  
+  i {
+    transition: transform 0.2s ease;
+  }
+  
+  &:hover {
+    background-color: #219653;
+    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.4);
+    
+    i {
+      transform: translateX(3px);
+    }
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 
