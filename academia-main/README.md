@@ -104,6 +104,10 @@ Uploaded files and static content are stored under the `uploads/` directory (or 
 
 Specify the project license here (if any). For questions, contact the maintainers or open an issue in the repository.
 
+## Learn more
+
+- LinkedIn post + explainer video: https://www.linkedin.com/posts/boussaada-lina-544057233_academiaapp-springboot-angular-activity-7332864740047679488-Nv_4?utm_source=share&utm_medium=member_desktop&rcm=ACoAADo0t0QBgoeLBJ8IICwC8bY_u_N93kSedQw
+
 ---
 
 Generated README added to help new contributors and developers run the system locally.
